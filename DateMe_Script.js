@@ -119,7 +119,6 @@
       try {
         await navigator.share({
           title: "데이트 확정 💌",
-          text: "시간/장소 확정했어!",
           url: link,
         });
         return;
