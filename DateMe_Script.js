@@ -197,7 +197,7 @@
 
   // 벚꽃 폭죽 (자연스럽게: 로켓/파티클 크기 랜덤 + 중력감)
   function createSakuraFireworks() {
-    const emojis = ["🌸", "🌸", "🌸", "🍬", "🍭"];
+    const emojis = ["🌸", "🌸", "🍃", "🍬", "🍭"];
     const W = window.innerWidth;
     const H = window.innerHeight;
 
