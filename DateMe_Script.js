@@ -4,17 +4,17 @@
   const btnArea = document.getElementById("btnArea");
   const result = document.getElementById("result");
 
-  // 제목(h1) - step2 넘어갈 때 숨길거
   const title = document.querySelector(".card h1");
 
-  // 2단계 요소들
   const step2 = document.getElementById("step2");
   const timeSel = document.getElementById("timeSel");
   const placeSel = document.getElementById("placeSel");
   const confirmBtn = document.getElementById("confirmBtn");
   const summary = document.getElementById("summary");
 
-  // 공유 요소들
+  const timeCustom = document.getElementById("timeCustom");
+  const placeCustom = document.getElementById("placeCustom");
+
   const shareBtn = document.getElementById("shareBtn");
   const shareHint = document.getElementById("shareHint");
 
@@ -28,6 +28,8 @@
     !placeSel ||
     !confirmBtn ||
     !summary ||
+    !timeCustom ||
+    !placeCustom ||
     !shareBtn ||
     !shareHint
   )
@@ -39,14 +41,13 @@
     img.src = src;
   });
 
-  // Yes 클릭 → 배경 변경 + 데이트 확정 표시 + (h1 숨김) + 2단계 + 폭죽
+  // Yes 클릭
   yesBtn.addEventListener("click", () => {
     document.body.style.backgroundImage =
       'linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.35)), url("Cat2.jpg")';
 
     result.style.display = "block";
 
-    // 제목 숨김(부드럽게)
     if (title) {
       title.style.opacity = "0";
       setTimeout(() => {
@@ -54,22 +55,45 @@
       }, 350);
     }
 
-    // 버튼 영역 숨기고 2단계 보여주기
     btnArea.style.display = "none";
     step2.style.display = "block";
 
     createSakuraFireworks();
   });
 
-  // 2단계 확정
+  // 기타 선택 시 입력칸 토글
+  timeSel.addEventListener("change", () => {
+    if (timeSel.value === "etc") {
+      timeCustom.style.display = "block";
+      timeCustom.focus();
+    } else {
+      timeCustom.style.display = "none";
+      timeCustom.value = "";
+    }
+  });
+
+  placeSel.addEventListener("change", () => {
+    if (placeSel.value === "etc") {
+      placeCustom.style.display = "block";
+      placeCustom.focus();
+    } else {
+      placeCustom.style.display = "none";
+      placeCustom.value = "";
+    }
+  });
+
+  // 확정
   confirmBtn.addEventListener("click", () => {
-    const t = timeSel.value;
-    const p = placeSel.value;
+    let t = timeSel.value;
+    let p = placeSel.value;
+
+    if (t === "etc") t = timeCustom.value.trim();
+    if (p === "etc") p = placeCustom.value.trim();
 
     summary.style.display = "block";
 
     if (!t || !p) {
-      summary.textContent = "시간/장소 둘 다 선택해줘 !!";
+      summary.textContent = "시간/장소 둘 다 선택(또는 입력)해줘 !!";
       return;
     }
 
@@ -80,16 +104,14 @@
     url.searchParams.set("t", t);
     url.searchParams.set("p", p);
 
-    // 주소창도 결과 링크로 변경
     history.replaceState(null, "", url.toString());
 
-    // 공유 버튼 표시 + 링크 저장
     shareBtn.style.display = "block";
     shareBtn.dataset.link = url.toString();
     shareHint.style.display = "none";
   });
 
-  // 결과 링크 공유 (아이폰은 share 시트 뜨고, 안 되면 복사)
+  // 공유
   shareBtn.addEventListener("click", async () => {
     const link = shareBtn.dataset.link || location.href;
 
@@ -135,10 +157,8 @@
     noBtn.style.top = y + "px";
   }
 
-  // ✅ PC
   noBtn.addEventListener("mouseenter", moveNo);
 
-  // ✅ iOS/모바일: 터치 시작 순간 도망(가장 중요)
   noBtn.addEventListener(
     "touchstart",
     (e) => {
@@ -148,14 +168,12 @@
     { passive: false }
   );
 
-  // ✅ iOS/모바일: 포인터 이벤트까지 추가(더 확실)
   noBtn.addEventListener("pointerenter", moveNo);
   noBtn.addEventListener("pointerdown", (e) => {
     e.preventDefault();
     moveNo();
   });
 
-  // ✅ 혹시 눌러도 도망
   noBtn.addEventListener("click", (e) => {
     e.preventDefault();
     moveNo();
@@ -183,8 +201,31 @@
     btnArea.style.display = "none";
     step2.style.display = "block";
 
-    timeSel.value = t;
-    placeSel.value = p;
+    // 기타 입력 복원 처리
+    if (
+      t !== "3/14(토) 12:00" &&
+      t !== "3/14(토) 12:30" &&
+      t !== "3/14(토) 13:00" &&
+      t !== "3/14(토) 13:30"
+    ) {
+      timeSel.value = "etc";
+      timeCustom.style.display = "block";
+      timeCustom.value = t;
+    } else {
+      timeSel.value = t;
+      timeCustom.style.display = "none";
+      timeCustom.value = "";
+    }
+
+    if (p !== "진주" && p !== "사천" && p !== "창원" && p !== "부산") {
+      placeSel.value = "etc";
+      placeCustom.style.display = "block";
+      placeCustom.value = p;
+    } else {
+      placeSel.value = p;
+      placeCustom.style.display = "none";
+      placeCustom.value = "";
+    }
 
     summary.style.display = "block";
     summary.innerHTML = `✅ 확정!<br><b>시간:</b> ${t}<br><b>장소:</b> ${p}`;
@@ -195,9 +236,9 @@
 
   initFromURL();
 
-  // 벚꽃 폭죽 (자연스럽게: 로켓/파티클 크기 랜덤 + 중력감)
+  // 폭죽
   function createSakuraFireworks() {
-    const emojis = ["🌸", "🌸", "🍃", "🍬", "🍭"];
+    const emojis = ["🌸", "🌸", "🌸", "🍬", "🍭"];
     const W = window.innerWidth;
     const H = window.innerHeight;
 
