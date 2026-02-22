@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>화이트데이 데이트 신청</title>
+    <link rel="stylesheet" href="DateMe_Style.css" />
+  </head>
+
+  <body>
+    <div class="card">
+      <h1>
+        다연아 발렌타인데이에는 못만났지만<br />
+        화이트데이에 같이 데이트 할래?
+      </h1>
+
+      <div class="btn-container" id="btnArea">
+        <button class="btn yes" id="yesBtn" type="button">Yes</button>
+        <button class="btn no" id="noBtn" type="button">No</button>
+      </div>
+
+      <div class="result" id="result">데이트 확정 !!</div>
+
+      <div class="step2" id="step2">
+        <h2>시간/장소 선택</h2>
+
+        <div class="field">
+          <label for="timeSel">시간</label>
+          <select id="timeSel">
+            <option value="">선택</option>
+            <option value="3/14(토) 12:00">3/14(토) 12:00</option>
+            <option value="3/14(토) 12:30">3/14(토) 12:30</option>
+            <option value="3/14(토) 13:00">3/14(토) 13:00</option>
+            <option value="3/14(토) 13:30">3/14(토) 13:30</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="placeSel">장소</label>
+          <select id="placeSel">
+            <option value="">선택</option>
+            <option value="진주">진주</option>
+            <option value="사천">사천</option>
+            <option value="창원">창원</option>
+            <option value="부산">부산</option>
+          </select>
+        </div>
+
+        <button class="btn confirm" id="confirmBtn" type="button">
+          확정
+        </button>
+
+        <div class="summary" id="summary"></div>
+
+        <button class="btn share" id="shareBtn" type="button">
+          결과 링크 공유하기
+        </button>
+        <div class="shareHint" id="shareHint"></div>
+      </div>
+    </div>
+
+    <script src="DateMe_Script.js"></script>
+  </body>
+</html>
